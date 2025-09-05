@@ -2,38 +2,35 @@ import { FastifyInstance } from 'fastify';
 import { createEmployeeHandler, getEmployeesHandler, updateEmployeeHandler } from './employee.controller';
 import { createEmployeeJsonSchema, getEmployeesJsonSchema, updateEmployeeJsonSchema } from './employee.schema';
 
-/**
- * Defines and registers the routes for the employees module.
- * @param server - The Fastify instance.
- */
-async function employeeRoutes(server: FastifyInstance) {
 
-    // Route to create a new employee
+async function employeeRoutes(server: FastifyInstance) {
     server.post(
         '/',
         {
+            preHandler: [server.authenticate], // Secure this route
             schema: createEmployeeJsonSchema,
         },
-        createEmployeeHandler
+        createEmployeeHandler as any
     );
 
-    // Route to get all employees
     server.get(
         '/',
         {
+            preHandler: [server.authenticate], // Secure this route
             schema: getEmployeesJsonSchema,
         },
         getEmployeesHandler
     );
 
-    // Route to update an employee
     server.put(
         '/:employeeId',
         {
+            preHandler: [server.authenticate], // Secure this route
             schema: updateEmployeeJsonSchema,
         },
-        updateEmployeeHandler
+        updateEmployeeHandler as any
     );
 }
 
 export default employeeRoutes;
+
